@@ -1,5 +1,5 @@
 ## Project Summary
-Create a machine learning model that detects fraudulent account charges.
+Create a machine learning (random forest) model that detects fraudulent account charges before they happen.
 
 ## Report
 ### EDA Insights
@@ -8,7 +8,7 @@ Create a machine learning model that detects fraudulent account charges.
 3) The median transaction amount for fraudulent transactions was nearly 6x higher than for non-fraudulent transactions.
 4) 98.1% of fraudulent transactions end with a zero origin account balance
 5) Nearly all fraudulent transactions drained the account of it's full starting balance.
-6) Accounts that started at 0 were fraudulent at a 0.19% rate, while being fraudulent 0.002% of the time, meaning that accounts with money in the account before a transaction were 95x more often fraudulent.
+6) Non-fraudulent transactions had a starting original balance of 0 at an average rate of 0.19%- fraudulent at a rate of 0.002%, meaning fraud occurred significantly less often if the starting balance was 0. Transactions with money in the account before a transaction were fraudulent 95x more often. 
 
 
 ## Dropped Columns
@@ -18,15 +18,16 @@ Create a machine learning model that detects fraudulent account charges.
 4) 'step' was dropped because EDA found that there were no time trends of fraud rate fluctuation.
 
 ## Hyperparameter Tuning
-I used random-search for hyperparameter tuning because it takes less time and less compute (encountered a memory error with grid search). Afterwards I ended up scaling down the random-search significantly due to compute time (10.3hrs and going on the 2nd try before reducing scope).
+I used random-search for hyperparameter tuning because it takes less time and less compute (encountered a memory error with grid search). Afterwards I ended up scaling down the random-search significantly due to compute time (10.3hrs and going on the 2nd try before reducing scope). Tuning was done on only 10% of the training data due to time constraints - the impacts of which are discussed below.
 
 ## Model Performance Pre-Tuning
-Running the model without hyperparameter tuning, but instead using scikitlearn's default hyperparameters actually had the model perform better on the recall score (.79 vs .57), meaning fraud cases were caught 22% more often. The pre-tuned model had a worse score for precision (.88 vs .94) - out of all transactions it flagged as fraud, only 88% were fraud. However, more false positives are a more desirable result than false negatives - which this model has less of due to it's higher recall score. The f1 score (.83 vs .71) means the two metrics are better balanced. My theory is that performance was better without tuning hyperparameters because tuning was done on only 10% of the training data in order to reduce compute time AND possibly that the hyperparameter picked for the search did not include depth at 'None', for example, limiting the complexity and the potential for better hyperparameter discovery. In any subsequent iterations I'd pick parameters that circle the defaults, and perform tuning on all of the training data, which will take more time but could potentially improve the resulting model.
+Running the model without hyperparameter tuning, but instead using scikitlearn's default hyperparameters actually had the model perform better on the recall score (.79 vs .57), meaning fraud cases were caught more often, at a 38.6% recall improvement and 79% of all fraud cases identified correctly as fraud. The pre-tuned model had a worse score for precision (.88 vs .94) - out of all transactions it flagged as fraud, only 88% were fraud. However, an increase in false positives tolerable when accounting for the decrease in false negatives - denoted by it's higher recall score. The f1 score (.83 vs .71) means the two metrics are better balanced. My theory is that performance was better for the model without tuned hyperparameters because tuning was done on only 10% of the training data in order to reduce compute time AND that the hyperparameter options picked to search through did not include enough range and variety. For example, depth at 'None' was not tested, which limited the complexity of each tree. In any subsequent iterations I'd pick parameters that include the defaults and values around them. Additionally, I'd perform tuning on all of the training data, which will take more time but will potentially improve the resulting model's prediction metrics.
 
 ## Final F1 Score
-Post hyperparameter tuning, I had a score of 0.71, representing the balance of the precision and recall metric - meaning that in this model, one metric is better than the other. Looking at the metrics themselves, precision is a high 0.94, while recall is only at 0.57, meaning the model misclassified 43% of fraud cases as non-fraud - letting much fraud slip by undetected. If having more false positives is more desirable than false negatives, a reworked model's outcome should aim for a higher recall.
+Post hyperparameter tuning, I had a score of 0.71, representing the balance of the precision and recall metric - meaning that in this model, one metric is noticeably better than the other. Looking at the metrics themselves, precision is a high 0.94, while recall is only at 0.57, meaning the model misclassified 43% of fraud cases as non-fraud - letting a high amount of fraud go undetected.
 
-After going back and creating a model without hyperparameter tuning, if I had to pick the model to use at this time, I'd actually go with the latter, due to it's better recall and ability to identify more actual fraudulent cases.
+If I had to pick one of the models to use at this time without further iteration, I'd go with the last model in the 'model.ipynb' notebook, which does not have tuned hyperparameters, because of it's better recall/ lower probability to misidentify fraud as a non-fraud transaction.
+
 
 
 ## Data Dictionary
