@@ -1,5 +1,5 @@
 ## Project Summary
-Create a machine learning (random forest) model that detects fraudulent account charges before they happen.
+Create a machine learning (random forest) model that detects fraudulent account transactions before they happen.
 
 ## Report
 ### EDA Insights
