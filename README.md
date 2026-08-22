@@ -3,7 +3,6 @@
 ● Preprocess and clean the dataset by fixing data types, engineering features, and dropping unnecessary columns, outputting a csv with clean data to train a model on.
 ● Train 5 iterations of random forest models- tuning hyper parameters, and outputting a final model that spots ~80% of fraud cases.
 
-
 ## Data Dictionary
 ● Step: A unit of time that represents hours in the dataset. Think of this as the timestamp of the transaction (e.g. hour 1, hour 2, … hour)
 ● Type: The type of transaction 
